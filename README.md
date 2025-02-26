@@ -89,7 +89,7 @@ The submission must produce 3D reconstructions for each test subject.
 
 📜 License
 
-This project is licensed under CC BY-NC-ND.
+This project is licensed under MIT License.
 
 📬 Contact & Support
 
