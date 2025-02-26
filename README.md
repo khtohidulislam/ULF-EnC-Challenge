@@ -37,6 +37,7 @@ Ensure you have Python 3.x installed, then run:
 pip install numpy nibabel pandas scikit-image
 
 git clone https://github.com/your-username/ULF-EnC-Challenge.git
+
 cd ULF-EnC-Challenge
 
 python generate_dummy_data.py
