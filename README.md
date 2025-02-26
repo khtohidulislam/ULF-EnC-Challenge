@@ -1,4 +1,4 @@
-# ULF-EnC
+# ULF-EnC-Challenge
 ULF-EnC: Ultra-Low-Field MRI Image Enhancement Challenge
 
 📌 Project Overview
@@ -14,4 +14,93 @@ Maintain anatomical integrity and clinical relevance.
 Benchmark solutions using SSIM and PSNR metrics.
 
 Promote accessibility to high-quality MRI in low-resource settings.
+
+📦 ULF-EnC-Challenge
+├── 📂 data
+│   ├── 📂 test
+│   │   ├── 📂 3T # Ground truth high-field MRI
+│   │   ├── 📂 64mT # Ultra-low-field MRI
+├── 📂 submissions
+│   ├── 📂 team1  # Example team submission
+│   ├── 📂 team2  # Additional submissions
+├── 📜 evaluation.py  # Evaluation script for ranking submissions
+├── 📜 generate_dummy_data.py  # Script for testing with synthetic data
+├── 📜 leaderboard.csv  # Generated results after evaluation
+├── 📜 evaluation.log  # Log file with warnings/errors
+├── 📜 README.md  # Project documentation
+
+🖥️ Installation & Setup
+
+1️⃣ Install Required Dependencies
+
+Ensure you have Python 3.x installed, then run:
+pip install numpy nibabel pandas scikit-image
+
+git clone https://github.com/your-username/ULF-EnC-Challenge.git
+cd ULF-EnC-Challenge
+
+python generate_dummy_data.py
+
+python evaluation.py
+
+cat leaderboard.csv
+
+📊 Evaluation Process
+
+Submissions are evaluated per subject and per modality.
+
+Two metrics are used:
+
+Structural Similarity Index (SSIM)
+
+Peak Signal-to-Noise Ratio (PSNR)
+
+Leaderboard ranks teams based on SSIM (higher is better).
+
+Results are stored in leaderboard.csv.
+
+🚀 Submission Guidelines
+
+🔹 File Naming
+
+Each team must submit enhanced MRI images in the following format:
+
+subject_{ID}_enhanced_{MODALITY}.nii.gz
+
+subject_1_enhanced_T1.nii.gz
+subject_1_enhanced_T2.nii.gz
+subject_1_enhanced_FLAIR.nii.gz
+
+📂 submissions/
+    ├── 📂 team_name/
+    │   ├── subject_1_enhanced_T1.nii.gz
+    │   ├── subject_1_enhanced_T2.nii.gz
+    │   ├── subject_1_enhanced_FLAIR.nii.gz
+    │   ├── ...
+
+🔹 Submission Format
+
+All submissions must be in .nii.gz format.
+
+Each team must upload a Docker image with their trained model.
+
+The submission must produce 3D reconstructions for each test subject.
+
+📜 License
+
+This project is licensed under CC BY-NC-ND.
+
+📬 Contact & Support
+
+For inquiries, please reach out via GitHub Issues or email the organizers.
+
+🎯 Future Work
+
+Extend the dataset with more paired 3T-64mT scans.
+
+Introduce additional deep learning-based evaluation metrics.
+
+Collaborate with medical experts to refine clinical impact.
+
+🚀 Join us in pushing the boundaries of medical imaging!
 
