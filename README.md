@@ -60,7 +60,7 @@ Mean Absolute Error (MAE)
 
 Normalised Mean Square Error (NMSE)
 
-Leaderboard ranks teams based on SSIM (higher is better).
+Leaderboard ranks teams based on a weighted combination of SSIM (70%), PSNR (10%), MAE (10%), and NMSE (10%) is used to evaluate reconstruction quality, emphasizing structural fidelity while incorporating intensity-based and error-based metrics.
 
 Results are stored in leaderboard.csv.
 
