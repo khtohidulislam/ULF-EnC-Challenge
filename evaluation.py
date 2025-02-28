@@ -1,16 +1,7 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Feb 20 10:43:03 2025
-
-@author: tisl0004
-"""
-
 import os
 import numpy as np
 import nibabel as nib
 import pandas as pd
-import json
 import logging
 from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import peak_signal_noise_ratio as psnr
@@ -40,13 +31,25 @@ def load_nifti(file_path):
         return None
 
 
+def calculate_mae(enhanced_img, reference_img):
+    """Compute Mean Absolute Error (MAE)."""
+    return np.mean(np.abs(enhanced_img - reference_img))
+
+
+def calculate_nmse(enhanced_img, reference_img):
+    """Compute Normalized Mean Squared Error (NMSE)."""
+    mse = np.mean((enhanced_img - reference_img) ** 2)
+    norm_factor = np.mean(reference_img ** 2)
+    return mse / norm_factor if norm_factor > 0 else np.inf
+
+
 def evaluate_submission(submission_path, reference_path):
-    """Compute SSIM and PSNR between enhanced and reference MRI images."""
+    """Compute SSIM, PSNR, MAE, and NMSE between enhanced and reference MRI images."""
     enhanced_img = load_nifti(submission_path)
     reference_img = load_nifti(reference_path)
     
     if enhanced_img is None or reference_img is None:
-        return None, None  # Skip evaluation if loading fails
+        return None, None, None, None  # Skip evaluation if loading fails
     
     # Normalize intensity
     enhanced_img = (enhanced_img - np.min(enhanced_img)) / (np.max(enhanced_img) - np.min(enhanced_img))
@@ -55,8 +58,10 @@ def evaluate_submission(submission_path, reference_path):
     # Compute metrics
     ssim_score = ssim(enhanced_img, reference_img, data_range=1.0)
     psnr_score = psnr(reference_img, enhanced_img, data_range=1.0)
+    mae_score = calculate_mae(enhanced_img, reference_img)
+    nmse_score = calculate_nmse(enhanced_img, reference_img)
     
-    return ssim_score, psnr_score
+    return ssim_score, psnr_score, mae_score, nmse_score
 
 
 def evaluate_all_submissions():
@@ -69,7 +74,7 @@ def evaluate_all_submissions():
         if not os.path.isdir(team_path):
             continue  # Skip non-directory files
         
-        team_scores = {"Team": team_folder, "SSIM": [], "PSNR": []}
+        team_scores = {"Team": team_folder, "SSIM": [], "PSNR": [], "MAE": [], "NMSE": []}
         
         for subject_id in range(1, NUM_TEST_CASES + 1):
             for modality in MODALITIES:
@@ -80,22 +85,36 @@ def evaluate_all_submissions():
                     logging.warning(f"Missing submission file for {team_folder} - Subject {subject_id} - {modality}")
                     continue
                 
-                ssim_score, psnr_score = evaluate_submission(submission_file, reference_file)
+                ssim_score, psnr_score, mae_score, nmse_score = evaluate_submission(submission_file, reference_file)
                 
                 if ssim_score is not None:
                     team_scores["SSIM"].append(ssim_score)
                     team_scores["PSNR"].append(psnr_score)
-                    logging.info(f"{team_folder} - Subject {subject_id} - {modality}: SSIM={ssim_score:.4f}, PSNR={psnr_score:.4f}")
+                    team_scores["MAE"].append(mae_score)
+                    team_scores["NMSE"].append(nmse_score)
+                    logging.info(f"{team_folder} - Subject {subject_id} - {modality}: SSIM={ssim_score:.4f}, PSNR={psnr_score:.4f}, MAE={mae_score:.4f}, NMSE={nmse_score:.4f}")
         
         # Average the metrics across all subjects and modalities
         if team_scores["SSIM"]:
             team_scores["SSIM"] = np.mean(team_scores["SSIM"])
             team_scores["PSNR"] = np.mean(team_scores["PSNR"])
+            team_scores["MAE"] = np.mean(team_scores["MAE"])
+            team_scores["NMSE"] = np.mean(team_scores["NMSE"])
+            
+            # Compute final score
+            final_score = (
+                0.7 * team_scores["SSIM"] +
+                0.1 * team_scores["PSNR"] +
+                0.1 * (1 - team_scores["MAE"]) +  # Inverted MAE (lower is better)
+                0.1 * (1 - team_scores["NMSE"])   # Inverted NMSE (lower is better)
+            )
+            
+            team_scores["Final Score"] = final_score
             results.append(team_scores)
     
     # Convert results to DataFrame
     df_results = pd.DataFrame(results)
-    df_results = df_results.sort_values(by="SSIM", ascending=False)  # Rank by SSIM
+    df_results = df_results.sort_values(by="Final Score", ascending=False)  # Rank by Final Score
     
     # Save leaderboard
     df_results.to_csv("leaderboard.csv", index=False)
@@ -107,4 +126,3 @@ def evaluate_all_submissions():
 if __name__ == "__main__":
     leaderboard = evaluate_all_submissions()
     print(leaderboard)
-
