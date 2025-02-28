@@ -56,6 +56,10 @@ Structural Similarity Index (SSIM)
 
 Peak Signal-to-Noise Ratio (PSNR)
 
+Mean Absolute Error (MAE)
+
+Normalised Mean Square Error (NMSE)
+
 Leaderboard ranks teams based on SSIM (higher is better).
 
 Results are stored in leaderboard.csv.
