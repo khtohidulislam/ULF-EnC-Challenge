@@ -5,46 +5,70 @@ ULF-EnC: Ultra-Low-Field MRI Image Enhancement Challenge
 
 The ULF-EnC Challenge is designed to advance deep learning techniques for enhancing ultra-low-field (64mT) MRI to match high-field (3T) MRI quality. This challenge provides a paired dataset of 3T and 64mT MRI scans and aims to push the boundaries of medical image enhancement by encouraging participants to develop robust algorithms that improve diagnostic capabilities.
 
+👉 Official Challenge Website on Synapse (https://www.synapse.org/Synapse:syn65485242/wiki/631224)
+
 🏆 Challenge Goals
 
 Develop deep learning models to enhance 64mT MRI images.
 
 Maintain anatomical integrity and clinical relevance.
 
-Benchmark solutions using SSIM and PSNR metrics.
+Submissions are benchmarked using a weighted combination of SSIM, PSNR, MAE, and NMSE, with SSIM contributing the most to the final ranking to emphasize structural fidelity.
 
 Promote accessibility to high-quality MRI in low-resource settings.
 
-📦 ULF-EnC-Challenge
-├── 📂 data
-│   ├── 📂 test
-│   │   ├── 📂 3T # Ground truth high-field MRI
-│   │   ├── 📂 64mT # Ultra-low-field MRI
-├── 📂 submissions
-│   ├── 📂 team1  # Example team submission
-│   ├── 📂 team2  # Additional submissions
-├── 📜 evaluation.py  # Evaluation script for ranking submissions
-├── 📜 generate_dummy_data.py  # Script for testing with synthetic data
-├── 📜 leaderboard.csv  # Generated results after evaluation
-├── 📜 evaluation.log  # Log file with warnings/errors
-├── 📜 README.md  # Project documentation
+## 📦 ULF-EnC-Challenge
 
-🖥️ Installation & Setup
+```
+ULF-EnC-Challenge/
+├── data/
+│   ├── test/
+│   │   ├── 3T/         # Ground truth high-field MRI
+│   │   ├── 64mT/       # Ultra-low-field MRI
+├── submissions/
+│   ├── team1/          # Example team submission
+│   ├── team2/          # Additional submissions
+├── evaluation.py       # Evaluation script for ranking submissions
+├── generate_dummy_data.py  # Script for testing with synthetic data
+├── leaderboard.csv     # Generated results after evaluation
+├── evaluation.log      # Log file with warnings/errors
+├── README.md           # Project documentation
+```
 
-1️⃣ Install Required Dependencies
+## 🖥️ Installation & Setup
 
-Ensure you have Python 3.x installed, then run:
+### 1️⃣ Install Required Dependencies
+
+Ensure you have **Python 3.x** installed, then run the following commands:
+
+```bash
 pip install numpy nibabel pandas scikit-image
+```
 
-git clone https://github.com/your-username/ULF-EnC-Challenge.git
+### 📥 Clone the Repository
 
+```bash
+git clone https://github.com/khtohidulislam/ULF-EnC-Challenge.git
 cd ULF-EnC-Challenge
+```
 
+### 🧪 Generate Dummy Data
+
+```bash
 python generate_dummy_data.py
+```
 
+### ✅ Run Evaluation
+
+```bash
 python evaluation.py
+```
 
+### 📊 View Leaderboard
+
+```bash
 cat leaderboard.csv
+```
 
 📊 Evaluation Process
 
@@ -64,32 +88,41 @@ Leaderboard ranks teams based on a weighted combination of SSIM (70%), PSNR (10%
 
 Results are stored in leaderboard.csv.
 
-🚀 Submission Guidelines
+## 🚀 Submission Guidelines
 
-🔹 File Naming
+### 🔹 File Naming
 
-Each team must submit enhanced MRI images in the following format:
+Each team must submit enhanced MRI images using the following naming format:
 
+```
 subject_{ID}_enhanced_{MODALITY}.nii.gz
+```
 
-subject_1_enhanced_T1.nii.gz
-subject_1_enhanced_T2.nii.gz
-subject_1_enhanced_FLAIR.nii.gz
+**Examples:**
 
-📂 submissions/
-    ├── 📂 team_name/
-    │   ├── subject_1_enhanced_T1.nii.gz
-    │   ├── subject_1_enhanced_T2.nii.gz
-    │   ├── subject_1_enhanced_FLAIR.nii.gz
-    │   ├── ...
+```
+subject_1_enhanced_T1.nii.gz  
+subject_1_enhanced_T2.nii.gz  
+subject_1_enhanced_FLAIR.nii.gz  
+```
 
-🔹 Submission Format
+**Expected Directory Structure:**
 
-All submissions must be in .nii.gz format.
+```
+submissions/
+└── team_name/
+    ├── subject_1_enhanced_T1.nii.gz
+    ├── subject_1_enhanced_T2.nii.gz
+    ├── subject_1_enhanced_FLAIR.nii.gz
+    ├── ...
+```
 
-Each team must upload a Docker image with their trained model.
+### 🔹 Submission Format
 
-The submission must produce 3D reconstructions for each test subject.
+- All reconstructed images must be submitted in **`.nii.gz`** format.
+- Each team must upload a **Docker image** containing their trained model.
+- The submission should produce **3D reconstructions** for each test subject.
+
 
 📜 License
 
